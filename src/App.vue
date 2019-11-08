@@ -33,17 +33,16 @@ export default class App extends Vue {
   waiting : string = 'waiting for data';
   lat : number = 0;
   lng : number = 0;
+  errorCatch : any;
 
   //methods
    getDataPosition() {
     if (navigator.geolocation){
       navigator.geolocation.getCurrentPosition(
-          data => {this.lat = data.coords.latitude;this.lng = data.coords.longitude; console.log(data)},
-          error => {console.log(error)}
+          data => {this.lat = data.coords.latitude;this.lng = data.coords.longitude;},
+          error => {this.errorCatch = error}
        )
     }
-
-    console.log("Pas d'accés à la geolocalisation");
 
   }
 
