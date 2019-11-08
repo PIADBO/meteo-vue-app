@@ -1,20 +1,58 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+  <div class="container" id="app">
+    <Header />
+      <div v-if="lat !== 0">
+        <Position v-bind:latitude="lat" v-bind:longitude="lng" />
+      </div>
+    <Footer />
+  
+      
+    
+    
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import HelloWorld from './components/HelloWorld.vue';
+import Position from './components/Position.vue';
+import Header from './components/Header.vue';
+import Footer from './components/Footer.vue';
 
 @Component({
   components: {
-    HelloWorld,
+    Position,
+    Header,
+    Footer
   },
 })
-export default class App extends Vue {}
+export default class App extends Vue {
+  //data
+  city : string = 'ville';
+  forecast : object = {};
+  isLoading : boolean = true;
+  waiting : string = 'waiting for data';
+  lat : number = 0;
+  lng : number = 0;
+
+  //methods
+   getDataPosition() {
+    if (navigator.geolocation){
+      navigator.geolocation.getCurrentPosition(
+          data => {this.lat = data.coords.latitude;this.lng = data.coords.longitude; console.log(data)},
+          error => {console.log(error)}
+       )
+    }
+
+    console.log("Pas d'accés à la geolocalisation");
+
+  }
+
+  //lifecicle
+  beforeMount() {
+    this.getDataPosition();
+  }
+
+}
 </script>
 
 <style>
@@ -22,8 +60,14 @@ export default class App extends Vue {}
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
+
   color: #2c3e50;
-  margin-top: 60px;
+  margin-top: 10px;
+}
+#app.container {
+  width : 300px;
+  border : 2px solid #c5c5c5;
+  border-radius: 10px;
+  padding : 0;
 }
 </style>
